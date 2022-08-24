@@ -1,2 +1,2 @@
 # Transom
-SPM build tool for generating Swift code from XML Schema
+SPM build tool for translating Swift to Kotlin.
