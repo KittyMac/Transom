@@ -94,7 +94,7 @@ import PackagePlugin
         var allOutputFiles = allInputFiles.map { outputFilePath + "/" + URL(fileURLWithPath: $0.string).deletingPathExtension().appendingPathExtension("kt").lastPathComponent }
         
         allOutputFiles.append(outputFilePath + "/canary.swift")
-                
+        
         if shouldProcess(inputs: allInputFiles.map { $0.string },
                          outputs: allOutputFiles) {
                                     

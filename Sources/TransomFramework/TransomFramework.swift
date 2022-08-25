@@ -38,12 +38,16 @@ public class TransomFramework {
                 
         var success = true
         
+        var kotlinFiles: [String] = []
+        
         for input in inputFiles {
             queue.addOperation {
                 let kotlinFileName = URL(fileURLWithPath: input).deletingPathExtension().appendingPathExtension("kt").lastPathComponent
                 let kotlinFilePath = outputDirectory + "/" + kotlinFileName
                 
-                print("\(input): warning: transom processing file")
+                //print("\(input): warning: transom processing file")
+                
+                kotlinFiles.append(kotlinFilePath)
                 
                 try? FileManager.default.removeItem(atPath: kotlinFilePath)
                 if let kotlin = self.translate(path: input) {
@@ -54,9 +58,12 @@ public class TransomFramework {
             }
         }
         
-        
-        
         queue.waitUntilAllOperationsAreFinished()
+        
+        if success {
+            success = compile(files: kotlinFiles,
+                              outputDirectory: outputDirectory)
+        }
         
         let canaryFilePath = outputDirectory + "/canary.swift"
         try? FileManager.default.removeItem(atPath: canaryFilePath)
@@ -66,6 +73,9 @@ public class TransomFramework {
             try! #"#error("Swift to Kotlin translation failed; please fix build errors to proceed")"#.write(toFile: canaryFilePath, atomically: false, encoding: .utf8)
         }
         
+        if success == false {
+            exit(1)
+        }
     }
     
     public func translate(file input: String,
@@ -81,6 +91,60 @@ public class TransomFramework {
         try? FileManager.default.removeItem(atPath: kotlinFilePath)
         if let kotlin = self.translate(path: input) {
             try? kotlin.write(toFile: kotlinFilePath, atomically: false, encoding: .utf8)
+        }
+    }
+    
+    
+    fileprivate func pathFor(executable name: String) -> String {
+        if FileManager.default.fileExists(atPath: "/opt/homebrew/bin/\(name)") {
+            return "/opt/homebrew/bin/\(name)"
+        } else if FileManager.default.fileExists(atPath: "/usr/bin/\(name)") {
+            return "/usr/bin/\(name)"
+        } else if FileManager.default.fileExists(atPath: "/usr/local/bin/\(name)") {
+            return "/usr/local/bin/\(name)"
+        } else if FileManager.default.fileExists(atPath: "/bin/\(name)") {
+            return "/bin/\(name)"
+        }
+        return "./\(name)"
+    }
+    
+    @discardableResult
+    fileprivate func compile(files: [String],
+                             outputDirectory: String) -> Bool {
+        let path = pathFor(executable: "kotlinc")
+        
+        do {
+            if FileManager.default.fileExists(atPath: path) == false {
+                print("\(path): warning: kotlinc could not be found, please install (brew install kotlin)")
+                return true
+            }
+            
+            let task = Process()
+            task.currentDirectoryURL = URL(fileURLWithPath: outputDirectory)
+            task.executableURL = URL(fileURLWithPath: path)
+            task.arguments = files
+            
+            let outputPipe = Pipe()
+            task.standardError = outputPipe
+            
+            try task.run()
+            
+            // note: kotlinc only includes a relative path to error lines, we need to
+            // convert this to absolute paths so xcode can resolve the file
+            let taskData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+            if let taskString = String(data: taskData, encoding: .utf8) {
+                let lines = taskString.components(separatedBy: "\n")
+                for line in lines {
+                    if line.contains(".kt:") {
+                        print(outputDirectory + "/" + line)
+                    }
+                }
+            }
+            
+            return task.terminationStatus == 0
+        } catch {
+            print("\(path): warning: kotlinc failed with error: \(error)")
+            return true
         }
     }
 }

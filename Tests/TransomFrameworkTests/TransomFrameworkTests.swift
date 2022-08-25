@@ -4,10 +4,11 @@ import TransomFramework
 final class TransomFrameworkTests: XCTestCase {
     
     func testBadCode() {
-        //let test = Blah()
+        /*
         if false {
             
         }
+         */
     }
     
     func testExample() throws {
