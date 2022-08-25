@@ -8,7 +8,7 @@ public class TransomFramework {
     
     public func translate(path: String) -> String? {
         guard let swift = try? String(contentsOfFile: path) else { return nil }
-        
+                
         let jib = Jib()
         
         _ = jib[eval: "let transom = {};"]!
@@ -35,19 +35,21 @@ public class TransomFramework {
         
         let queue = OperationQueue()
         queue.maxConcurrentOperationCount = ProcessInfo.processInfo.activeProcessorCount
-        
-        
+                
         var success = true
         
         for input in inputFiles {
             queue.addOperation {
                 let kotlinFileName = URL(fileURLWithPath: input).deletingPathExtension().appendingPathExtension("kt").lastPathComponent
                 let kotlinFilePath = outputDirectory + "/" + kotlinFileName
+                
+                print("\(input): warning: transom processing file")
+                
+                try? FileManager.default.removeItem(atPath: kotlinFilePath)
                 if let kotlin = self.translate(path: input) {
                     try? kotlin.write(toFile: kotlinFilePath, atomically: false, encoding: .utf8)
                 } else {
                     success = false
-                    try? FileManager.default.removeItem(atPath: kotlinFilePath)
                 }
             }
         }
@@ -57,6 +59,7 @@ public class TransomFramework {
         queue.waitUntilAllOperationsAreFinished()
         
         let canaryFilePath = outputDirectory + "/canary.swift"
+        try? FileManager.default.removeItem(atPath: canaryFilePath)
         if success {
             try! "".write(toFile: canaryFilePath, atomically: false, encoding: .utf8)
         } else {
@@ -74,10 +77,10 @@ public class TransomFramework {
         
         let kotlinFileName = URL(fileURLWithPath: input).deletingPathExtension().appendingPathExtension("kt").lastPathComponent
         let kotlinFilePath = outputDirectory + "/" + kotlinFileName
+        
+        try? FileManager.default.removeItem(atPath: kotlinFilePath)
         if let kotlin = self.translate(path: input) {
             try? kotlin.write(toFile: kotlinFilePath, atomically: false, encoding: .utf8)
-        } else {
-            try? FileManager.default.removeItem(atPath: kotlinFilePath)
         }
     }
 }

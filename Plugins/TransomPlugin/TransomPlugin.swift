@@ -74,10 +74,9 @@ import PackagePlugin
         //gatherSwiftInputFiles(targets: target.recursiveTargetDependencies,
         //                      inputFiles: &dependencyFiles)
         
+        
         let allInputFiles = rootFiles + dependencyFiles
-        
-        print(allInputFiles)
-        
+                
         let inputFilesFilePath = context.pluginWorkDirectory.string + "/inputFiles.txt"
         var inputFilesString = ""
         
@@ -98,6 +97,7 @@ import PackagePlugin
                 
         if shouldProcess(inputs: allInputFiles.map { $0.string },
                          outputs: allOutputFiles) {
+                                    
             return [
                 .buildCommand(
                     displayName: "Transom Plugin - generating Kotlin...",
@@ -112,6 +112,7 @@ import PackagePlugin
             ]
         }
         
+                
         return [
             .buildCommand(
                 displayName: "Transom Plugin - skipping...",
@@ -123,59 +124,4 @@ import PackagePlugin
         ]
     }
 }
-/*
 
-fileprivate func pathFor(executable name: String) -> String {
-    if FileManager.default.fileExists(atPath: "/opt/homebrew/bin/\(name)") {
-        return "/opt/homebrew/bin/\(name)"
-    } else if FileManager.default.fileExists(atPath: "/usr/bin/\(name)") {
-        return "/usr/bin/\(name)"
-    } else if FileManager.default.fileExists(atPath: "/usr/local/bin/\(name)") {
-        return "/usr/local/bin/\(name)"
-    } else if FileManager.default.fileExists(atPath: "/bin/\(name)") {
-        return "/bin/\(name)"
-    }
-    return "./\(name)"
-}
-
-fileprivate func git() -> String? {
-    do {
-        let path = pathFor(executable: "git")
-                    
-        let repoPath = FileManager.default.currentDirectoryPath
-        
-        let task = Process()
-        task.executableURL = URL(fileURLWithPath: path)
-        task.arguments = [
-            "-C",
-            repoPath,
-            "describe"
-        ]
-        let inputPipe = Pipe()
-        let outputPipe = Pipe()
-        task.standardInput = inputPipe
-        task.standardOutput = outputPipe
-        task.standardError = nil
-        try task.run()
-        
-        DispatchQueue.global(qos: .userInitiated).async {
-            inputPipe.fileHandleForWriting.write(Data())
-            inputPipe.fileHandleForWriting.closeFile()
-        }
-        let tagData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-                        
-        if let tagString = String(data: tagData, encoding: .utf8) {
-            if tagString.hasPrefix("v") && tagString.components(separatedBy: ".").count == 3 {
-                return tagString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-            } else {
-                print("warning: git describe did not return a valid semver, got \(tagString) instead")
-            }
-        }
-        
-        return nil
-    } catch {
-        print("warning: failed to retrieve semver from git")
-        return nil
-    }
-}
-*/
