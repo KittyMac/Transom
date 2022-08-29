@@ -13,7 +13,7 @@ final class TransomFrameworkTests: XCTestCase {
     
     func testExample() throws {
         
-        TransomFramework.shared.translate(file: "/Users/rjbowli/Library/Developer/Xcode/DerivedData/Transom-hfbrfltfpvkvrscztuixgagzspfn/SourcePackages/transom/TransomFrameworkTests/TransomPlugin/inputFiles.txt",
-                                          outputDirectory: "/Users/rjbowli/Library/Developer/Xcode/DerivedData/Transom-hfbrfltfpvkvrscztuixgagzspfn/SourcePackages/transom/TransomFrameworkTests/TransomPlugin")
+        //TransomFramework.shared.translate(file: "/Users/rjbowli/Library/Developer/Xcode/DerivedData/Transom-hfbrfltfpvkvrscztuixgagzspfn/SourcePackages/transom/TransomFrameworkTests/TransomPlugin/inputFiles.txt",
+        //                                  outputDirectory: "/Users/rjbowli/Library/Developer/Xcode/DerivedData/Transom-hfbrfltfpvkvrscztuixgagzspfn/SourcePackages/transom/TransomFrameworkTests/TransomPlugin")
     }
 }

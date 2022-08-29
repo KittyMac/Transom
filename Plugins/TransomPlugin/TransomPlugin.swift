@@ -2,41 +2,7 @@ import Foundation
 import PackagePlugin
 
 @main struct TransomPlugin: BuildToolPlugin {
-    
-    private func shouldProcess(inputs: [String],
-                               outputs: [String]) -> Bool {
-        var maxInputDate = Date.distantPast
-        var minOutputDate = Date.distantFuture
         
-        for input in inputs {
-            if let attr = try? FileManager.default.attributesOfItem(atPath: input),
-               let date = attr[FileAttributeKey.modificationDate] as? Date {
-                if date > maxInputDate {
-                    print("input: \(input) is \(date)")
-                    maxInputDate = date
-                }
-            }
-        }
-        
-        for output in outputs {
-            if let attr = try? FileManager.default.attributesOfItem(atPath: output),
-               let date = attr[FileAttributeKey.modificationDate] as? Date {
-                if date < minOutputDate {
-                    print("output: \(output) is \(date)")
-                    minOutputDate = date
-                }
-            } else {
-                return true
-            }
-        }
-        
-        if maxInputDate == Date.distantPast || minOutputDate == Date.distantFuture {
-            return true
-        }
-                
-        return minOutputDate < maxInputDate
-    }
-    
     func gatherSwiftInputFiles(targets: [Target],
                                inputFiles: inout [PackagePlugin.Path]) {
         
@@ -95,29 +61,14 @@ import PackagePlugin
         
         allOutputFiles.append(outputFilePath + "/canary.swift")
         
-        if shouldProcess(inputs: allInputFiles.map { $0.string },
-                         outputs: allOutputFiles) {
-                                    
-            return [
-                .buildCommand(
-                    displayName: "Transom Plugin - generating Kotlin...",
-                    executable: tool.path,
-                    arguments: [
-                        inputFilesFilePath,
-                        outputFilePath
-                    ],
-                    inputFiles: allInputFiles,
-                    outputFiles: allOutputFiles.map { PackagePlugin.Path($0) }
-                )
-            ]
-        }
-        
-                
         return [
             .buildCommand(
-                displayName: "Transom Plugin - skipping...",
+                displayName: "Transom Plugin - generating Kotlin...",
                 executable: tool.path,
-                arguments: [ "skip", outputFilePath ],
+                arguments: [
+                    inputFilesFilePath,
+                    outputFilePath
+                ],
                 inputFiles: allInputFiles,
                 outputFiles: allOutputFiles.map { PackagePlugin.Path($0) }
             )
