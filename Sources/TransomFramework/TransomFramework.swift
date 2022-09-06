@@ -42,6 +42,7 @@ public class TransomFramework {
         var success = true
         
         var kotlinFiles: [String] = []
+        let kotlinFilesLock = NSLock()
         
         for input in inputFiles {
             queue.addOperation {
@@ -50,7 +51,9 @@ public class TransomFramework {
                 
                 //print("\(input): warning: transom processing file")
                 
+                kotlinFilesLock.lock()
                 kotlinFiles.append(kotlinFilePath)
+                kotlinFilesLock.unlock()
                 
                 try? FileManager.default.removeItem(atPath: kotlinFilePath)
                 if let kotlin = self.translate(path: input) {
