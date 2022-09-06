@@ -2,14 +2,39 @@
 
 import PackageDescription
 
+// When runnning "make release" to build the binary tools change this to true
+// Otherwise always set it to false
+#if false
+let productsTarget: [PackageDescription.Product] = [
+    .executable(name: "TransomTool", targets: ["TransomTool"]),
+]
+let pluginTarget: [PackageDescription.Target] = [
+    .executableTarget(
+        name: "TransomTool",
+        dependencies: [
+            "Hitch",
+            "TransomFramework",
+            .product(name: "ArgumentParser", package: "swift-argument-parser")
+        ]
+    )
+]
+#else
+let productsTarget: [PackageDescription.Product] = [
+    .library(name: "TransomTool", targets: ["TransomTool"]),
+]
+let pluginTarget: [PackageDescription.Target] = [
+    .binaryTarget(name: "TransomTool",
+                  path: "dist/TransomTool.zip"),
+]
+#endif
+
 let package = Package(
     name: "Transom",
     platforms: [
         .macOS(.v10_13), .iOS(.v11)
     ],
-    products: [
-        .executable(name: "Transom", targets: ["Transom"]),
-        .library(name: "TransomFramework", targets: ["TransomFramework"]),
+    products: productsTarget + [
+        .plugin(name: "TransomPlugin", targets: ["TransomPlugin"]),
     ],
     dependencies: [
         .package(url: "https://github.com/KittyMac/Pamphlet.git", from: "0.3.5"),
@@ -17,32 +42,20 @@ let package = Package(
 		.package(url: "https://github.com/KittyMac/Hitch.git", from: "0.4.0"),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
     ],
-    targets: [
-        .executableTarget(
-            name: "Transom",
-            dependencies: [
-                "Hitch",
-                "TransomFramework",
-                .product(name: "ArgumentParser", package: "swift-argument-parser")
-            ]
-        ),
+    targets: pluginTarget + [
         .plugin(
             name: "TransomPlugin",
             capability: .buildTool(),
-            dependencies: [
-                "Transom"
-            ]
+            dependencies: ["TransomTool"]
         ),
         .target(
             name: "TransomFramework",
             dependencies: [
                 "Hitch",
-                "Jib",
-                "Pamphlet",
-                .product(name: "PamphletFramework", package: "Pamphlet")
+                "Jib"
             ],
             plugins: [
-                .plugin(name: "PamphletPlugin", package: "Pamphlet")
+                .plugin(name: "PamphletReleaseOnlyPlugin", package: "Pamphlet")
             ]
         ),
         .testTarget(
@@ -50,12 +63,9 @@ let package = Package(
             dependencies: [
                 "TransomFramework"
             ],
-            exclude: [
-                "Tests"
-            ],
             plugins: [
                 .plugin(name: "TransomPlugin")
             ]
-        ),
+        )
     ]
 )

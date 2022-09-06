@@ -1,6 +1,5 @@
 import Jib
 import Hitch
-import Pamphlet
 import Foundation
 
 public class TransomFramework {
@@ -12,7 +11,7 @@ public class TransomFramework {
         let jib = Jib()
         
         _ = jib[eval: "let transom = {};"]!
-        _ = jib[eval: Pamphlet.TransomMinJs()]!
+        _ = jib[eval: TransomFrameworkPamphlet.TransomMinJs()]!
                 
         let jsTransate = jib[function: "transom.translate"]!
                         

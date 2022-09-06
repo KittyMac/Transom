@@ -29,7 +29,7 @@ import PackagePlugin
             return []
         }
 
-        let tool = try context.tool(named: "Transom")
+        let tool = try context.tool(named: "TransomTool")
         
         // Find all .swift files in our target and all of our target's dependencies, add them as input files
         var rootFiles: [PackagePlugin.Path] = []
