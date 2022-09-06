@@ -57,8 +57,8 @@ import PackagePlugin
         
         let outputFilePath = context.pluginWorkDirectory.string
         
-        var allOutputFiles = allInputFiles.map { outputFilePath + "/" + URL(fileURLWithPath: $0.string).deletingPathExtension().appendingPathExtension("kt").lastPathComponent }
-        
+        var allOutputFiles: [String] = []
+        //allOutputFiles += allInputFiles.map { outputFilePath + "/" + URL(fileURLWithPath: $0.string).deletingPathExtension().appendingPathExtension("kt").lastPathComponent }
         allOutputFiles.append(outputFilePath + "/canary.swift")
         
         return [
