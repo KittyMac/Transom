@@ -15,7 +15,10 @@ final class TransomFrameworkTests: XCTestCase {
     }
     
     func testExample() throws {
-        //TransomFramework.shared.translate(file: "/Users/rjbowli/Library/Developer/Xcode/DerivedData/Transom-hfbrfltfpvkvrscztuixgagzspfn/SourcePackages/transom/TransomFrameworkTests/TransomPlugin/inputFiles.txt",
-        //                                  outputDirectory: "/Users/rjbowli/Library/Developer/Xcode/DerivedData/Transom-hfbrfltfpvkvrscztuixgagzspfn/SourcePackages/transom/TransomFrameworkTests/TransomPlugin")
+        //measure {
+        //    TransomFramework.shared.translate(file: "/Users/rjbowli/Library/Developer/Xcode/DerivedData/smallplanet_RoverCore_SDK-chvrhtltmvffplfrunnmjdkpfizx/SourcePackages/smallplanet_rovercore_sdk/RoverCore/TransomPlugin/inputFiles.txt",
+        //                                      outputDirectory: "/Users/rjbowli/Library/Developer/Xcode/DerivedData/smallplanet_RoverCore_SDK-chvrhtltmvffplfrunnmjdkpfizx/SourcePackages/smallplanet_rovercore_sdk/RoverCore/TransomPlugin")
+        //}
     }
 }
+
