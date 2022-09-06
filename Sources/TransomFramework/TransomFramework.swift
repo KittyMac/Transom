@@ -7,6 +7,10 @@ public class TransomFramework {
     
     public func translate(path: String) -> String? {
         guard let swift = try? String(contentsOfFile: path) else { return nil }
+        
+        if swift.contains("// kotlin:") == false && swift.contains("//kotlin:") == false {
+            return "\n// no kotlin tags found, skipping...\n"
+        }
                 
         let jib = Jib()
         
@@ -59,7 +63,7 @@ public class TransomFramework {
         
         queue.waitUntilAllOperationsAreFinished()
         
-        if success {
+        if success && kotlinFiles.count > 0 {
             success = compile(files: kotlinFiles,
                               outputDirectory: outputDirectory)
         }
