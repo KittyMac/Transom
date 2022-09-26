@@ -1,5 +1,6 @@
 import TransomFramework
 import ArgumentParser
+import Foundation
 
 struct Translate: ParsableCommand {
     
@@ -10,6 +11,11 @@ struct Translate: ParsableCommand {
     var outputDirectory: String
     
     mutating func run() {
+        if let buildAction = ProcessInfo.processInfo.environment["ACTION"],
+           buildAction == "indexbuild" {
+            return
+        }
+        
         if inFile != "skip" {
             TransomFramework.shared.translate(file: inFile,
                                               outputDirectory: outputDirectory)
