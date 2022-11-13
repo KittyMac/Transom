@@ -6,25 +6,43 @@ import PackageDescription
 // Otherwise always set it to false
 #if false
 let productsTarget: [PackageDescription.Product] = [
-    .executable(name: "TransomTool", targets: ["TransomTool"]),
+    
 ]
 let pluginTarget: [PackageDescription.Target] = [
     .executableTarget(
-        name: "TransomTool",
+        name: "TransomTool-focal",
         dependencies: [
             "Hitch",
             "TransomFramework",
             .product(name: "ArgumentParser", package: "swift-argument-parser")
         ]
-    )
+    ),
+    .plugin(
+        name: "TransomPlugin",
+        capability: .buildTool(),
+        dependencies: ["TransomTool-focal"]
+    ),
 ]
 #else
 let productsTarget: [PackageDescription.Product] = [
-    .library(name: "TransomTool", targets: ["TransomTool"]),
+    .library(name: "TransomTool", targets: [
+        "TransomTool-focal",
+        "TransomTool-amazonlinux2"
+    ]),
 ]
 let pluginTarget: [PackageDescription.Target] = [
-    .binaryTarget(name: "TransomTool",
-                  path: "dist/TransomTool.zip"),
+    .binaryTarget(name: "TransomTool-focal",
+                  path: "dist/TransomTool-focal.zip"),
+    .binaryTarget(name: "TransomTool-amazonlinux2",
+                  path: "dist/TransomTool-amazonlinux2.zip"),
+    .plugin(
+        name: "TransomPlugin",
+        capability: .buildTool(),
+        dependencies: [
+            "TransomTool-focal",
+            "TransomTool-amazonlinux2"
+        ]
+    ),
 ]
 #endif
 
@@ -43,11 +61,6 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
     ],
     targets: pluginTarget + [
-        .plugin(
-            name: "TransomPlugin",
-            capability: .buildTool(),
-            dependencies: ["TransomTool"]
-        ),
         .target(
             name: "TransomFramework",
             dependencies: [
