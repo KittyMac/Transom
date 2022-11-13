@@ -27,7 +27,8 @@ let pluginTarget: [PackageDescription.Target] = [
 let productsTarget: [PackageDescription.Product] = [
     .library(name: "TransomTool", targets: [
         "TransomTool-focal",
-        "TransomTool-amazonlinux2"
+        "TransomTool-amazonlinux2",
+        "TransomTool-fedora",
     ]),
 ]
 let pluginTarget: [PackageDescription.Target] = [
@@ -35,12 +36,15 @@ let pluginTarget: [PackageDescription.Target] = [
                   path: "dist/TransomTool-focal.zip"),
     .binaryTarget(name: "TransomTool-amazonlinux2",
                   path: "dist/TransomTool-amazonlinux2.zip"),
+    .binaryTarget(name: "TransomTool-fedora",
+                  path: "dist/TransomTool-fedora.zip"),
     .plugin(
         name: "TransomPlugin",
         capability: .buildTool(),
         dependencies: [
             "TransomTool-focal",
-            "TransomTool-amazonlinux2"
+            "TransomTool-amazonlinux2",
+            "TransomTool-fedora",
         ]
     ),
 ]

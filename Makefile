@@ -46,8 +46,8 @@ release: install docker
 
 	# Getting plugin for focal
 	docker pull kittymac/transom-focal:latest
-	docker run --platform linux/arm64 --rm -v $(DIST):/outTemp kittymac/transom-focal /bin/bash -lc 'cp /root/Transom/.build/aarch64-unknown-linux-gnu/release/TransomTool-focal /outTemp/TransomTool-focal.artifactbundle/TransomTool-arm64/bin/TransomTool'
-	docker run --platform linux/amd64 --rm -v $(DIST):/outTemp kittymac/transom-focal /bin/bash -lc 'cp /root/Transom/.build/x86_64-unknown-linux-gnu/release/TransomTool-focal /outTemp/TransomTool-focal.artifactbundle/TransomTool-amd64/bin/TransomTool'
+	docker run --platform linux/arm64 --rm -v $(DIST):/outTemp kittymac/transom-focal /bin/bash -lc 'cp TransomTool-focal /outTemp/TransomTool-focal.artifactbundle/TransomTool-arm64/bin/TransomTool'
+	docker run --platform linux/amd64 --rm -v $(DIST):/outTemp kittymac/transom-focal /bin/bash -lc 'cp TransomTool-focal /outTemp/TransomTool-focal.artifactbundle/TransomTool-amd64/bin/TransomTool'
 	cp ./dist/TransomTool ./dist/TransomTool-focal.artifactbundle/TransomTool-macos/bin/TransomTool
 	
 	rm -f ./dist/TransomTool-focal.zip
@@ -55,12 +55,21 @@ release: install docker
 	
 	# Getting plugin for amazonlinux2
 	docker pull kittymac/transom-amazonlinux2:latest
-	docker run --platform linux/arm64 --rm -v $(DIST):/outTemp kittymac/transom-amazonlinux2 /bin/bash -lc 'cp /root/Transom/.build/aarch64-unknown-linux-gnu/release/TransomTool-focal /outTemp/TransomTool-amazonlinux2.artifactbundle/TransomTool-arm64/bin/TransomTool'
-	docker run --platform linux/amd64 --rm -v $(DIST):/outTemp kittymac/transom-amazonlinux2 /bin/bash -lc 'cp /root/Transom/.build/x86_64-unknown-linux-gnu/release/TransomTool-focal /outTemp/TransomTool-amazonlinux2.artifactbundle/TransomTool-amd64/bin/TransomTool'
+	docker run --platform linux/arm64 --rm -v $(DIST):/outTemp kittymac/transom-amazonlinux2 /bin/bash -lc 'cp TransomTool-focal /outTemp/TransomTool-amazonlinux2.artifactbundle/TransomTool-arm64/bin/TransomTool'
+	docker run --platform linux/amd64 --rm -v $(DIST):/outTemp kittymac/transom-amazonlinux2 /bin/bash -lc 'cp TransomTool-focal /outTemp/TransomTool-amazonlinux2.artifactbundle/TransomTool-amd64/bin/TransomTool'
 	cp ./dist/TransomTool ./dist/TransomTool-amazonlinux2.artifactbundle/TransomTool-macos/bin/TransomTool
 	
 	rm -f ./dist/TransomTool-amazonlinux2.zip
 	cd ./dist && zip -r ./TransomTool-amazonlinux2.zip ./TransomTool-amazonlinux2.artifactbundle
+	
+	# Getting plugin for fedora
+	docker pull kittymac/transom-fedora:latest
+	docker run --platform linux/arm64 --rm -v $(DIST):/outTemp kittymac/transom-fedora /bin/bash -lc 'cp TransomTool-focal /outTemp/TransomTool-fedora.artifactbundle/TransomTool-arm64/bin/TransomTool'
+	docker run --platform linux/amd64 --rm -v $(DIST):/outTemp kittymac/transom-fedora /bin/bash -lc 'cp TransomTool-focal /outTemp/TransomTool-fedora.artifactbundle/TransomTool-amd64/bin/TransomTool'
+	cp ./dist/TransomTool ./dist/TransomTool-fedora.artifactbundle/TransomTool-macos/bin/TransomTool
+	
+	rm -f ./dist/TransomTool-fedora.zip
+	cd ./dist && zip -r ./TransomTool-fedora.zip ./TransomTool-fedora.artifactbundle
 
 docker:
 	-docker buildx create --name local_builder
@@ -70,7 +79,9 @@ docker:
 	-docker login
 	docker buildx build --file Dockerfile-focal --platform linux/amd64,linux/arm64 --push -t kittymac/transom-focal .
 	docker buildx build --file Dockerfile-amazonlinux2 --platform linux/amd64,linux/arm64 --push -t kittymac/transom-amazonlinux2 .
+	docker buildx build --file Dockerfile-fedora --platform linux/amd64,linux/arm64 --push -t kittymac/transom-fedora .
 
 docker-shell:
-	docker pull kittymac/transom
-	docker run --platform linux/arm64 --rm -it --entrypoint bash kittymac/transom
+	docker buildx build --file Dockerfile-fedora --platform linux/amd64,linux/arm64 --push -t kittymac/transom-fedora .
+	docker pull kittymac/transom-fedora
+	docker run --platform linux/amd64 --rm -it --entrypoint bash kittymac/transom-fedora
