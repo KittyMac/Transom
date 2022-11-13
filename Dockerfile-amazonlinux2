@@ -1,4 +1,4 @@
-FROM swift:5.6.2-amazonlinux2
+FROM swift:5.6.2-amazonlinux2 as builder
 
 RUN yum install -y \
     libatomic1 \
@@ -13,5 +13,11 @@ COPY ./Plugins ./Plugins
 COPY ./Sources ./Sources
 COPY ./Tests ./Tests
 
-RUN swift test
+RUN swift package reset
 RUN swift build --configuration release
+
+FROM fedora:37
+
+WORKDIR /root/Transom
+COPY --from=builder /root/Transom/.build/release/TransomTool-focal .
+COPY --from=builder /root/Transom/.build/release/TransomTool-focal .
