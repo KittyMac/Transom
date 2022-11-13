@@ -14,12 +14,12 @@ public class TransomFramework {
                 
         let jib = Jib()
         
-        _ = jib[eval: "let transom = {};"]!
-        _ = jib[eval: TransomFrameworkPamphlet.TransomMinJs()]!
+        _ = jib.eval("let transom = {};")!
+        _ = jib.eval(TransomFrameworkPamphlet.TransomMinJs())!
                 
         let jsTransate = jib[function: "transom.translate"]!
-                        
-        let kotlin = jib.call(jsTransate, [path, swift])?.toString()
+        
+        let kotlin = jib.call(string: jsTransate, [path, swift])
         guard kotlin != "undefined" else { return nil }
         return kotlin
     }

@@ -6,8 +6,8 @@ import TransomFramework
 final class TransomFrameworkTests: XCTestCase {
     
     func testBadCode() {
-        let x = 5
-        let y = 27
+        let x: Int = 5
+        let y: Int = 27
         if x < y {
             print("true")
         }

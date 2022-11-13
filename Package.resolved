@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Hitch.git",
       "state" : {
-        "revision" : "6c4eeb3a675c5649a27e51a8dfd67ab0439357d1",
-        "version" : "0.4.48"
+        "revision" : "0d5d7e7473b37cd0d69c7e503b7d6b9bb019439e",
+        "version" : "0.4.87"
       }
     },
     {
@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Jib.git",
       "state" : {
-        "revision" : "27c16a0ebbbd2cc66156ac9ead371e2018232fc3",
-        "version" : "0.0.11"
+        "revision" : "522069f3d0ed3ab1c2b537f2424a2e830d79dc7a",
+        "version" : "0.0.48"
       }
     },
     {
@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Pamphlet.git",
       "state" : {
-        "revision" : "3de1b3c529e225eae6b773663cfe625c59f0baef",
-        "version" : "0.3.51"
+        "revision" : "293556943c6d0c208e2c0cf81c9a411c6bad85ff",
+        "version" : "0.3.58"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Spanker.git",
       "state" : {
-        "revision" : "c383c78d988f925d071b0f204e4591c8a198843e",
-        "version" : "0.2.27"
+        "revision" : "98b15034240c9ff68279d929cb365b6fb389db27",
+        "version" : "0.2.29"
       }
     },
     {
@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-argument-parser",
       "state" : {
-        "revision" : "9f39744e025c7d377987f30b03770805dcb0bcd1",
-        "version" : "1.1.4"
+        "revision" : "fddd1c00396eed152c45a46bea9f47b98e59301d",
+        "version" : "1.2.0"
       }
     }
   ],
