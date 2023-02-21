@@ -147,6 +147,8 @@ public class TransomFramework {
                 }
             }
             
+            task.waitUntilExit()
+            
             return task.terminationStatus == 0
         } catch {
             print("\(path): warning: kotlinc failed with error: \(error)")
