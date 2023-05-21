@@ -47,8 +47,12 @@ import PackagePlugin
                let osTool = try? context.tool(named: "TransomTool-amazonlinux2") {
                 tool = osTool
             }
-            if osFile.contains("Fedora Linux"),
+            if osFile.contains("Fedora Linux 37"),
                let osTool = try? context.tool(named: "TransomTool-fedora") {
+                tool = osTool
+            }
+            if osFile.contains("Fedora Linux 38"),
+               let osTool = try? context.tool(named: "TransomTool-fedora38") {
                 tool = osTool
             }
         }

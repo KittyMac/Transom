@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Hitch.git",
       "state" : {
-        "revision" : "d360da4c21a41315281bb21a6d347dba9839cad0",
-        "version" : "0.4.97"
+        "revision" : "f775d6fb66472716b0c5080db13b1cacd29441f9",
+        "version" : "0.4.107"
       }
     },
     {
@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Jib.git",
       "state" : {
-        "revision" : "997f7152a227ada2e1cb12601bfb373ad0647425",
-        "version" : "0.0.54"
+        "revision" : "798c1183157440c0ddab745fb6986768f58f31a5",
+        "version" : "0.0.55"
       }
     },
     {
@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Pamphlet.git",
       "state" : {
-        "revision" : "eb9759246f1f17041f3d2221595a7be05e093de4",
-        "version" : "0.3.74"
+        "revision" : "bfa2200c6d4a96d989f71bf1eb71be925795c1ac",
+        "version" : "0.3.83"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Spanker.git",
       "state" : {
-        "revision" : "1d11bc1a548c623a806af547dd2346c51b48a46c",
-        "version" : "0.2.32"
+        "revision" : "6287aebdb7cb64787b7a6790bfef860ccb55e0ef",
+        "version" : "0.2.33"
       }
     },
     {

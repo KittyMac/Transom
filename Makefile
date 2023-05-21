@@ -70,6 +70,15 @@ release: install docker
 	
 	rm -f ./dist/TransomTool-fedora.zip
 	cd ./dist && zip -r ./TransomTool-fedora.zip ./TransomTool-fedora.artifactbundle
+	
+	# Getting plugin for fedora38
+	docker pull kittymac/transom-fedora38:latest
+	docker run --platform linux/arm64 --rm -v $(DIST):/outTemp kittymac/transom-fedora38 /bin/bash -lc 'cp TransomTool-focal /outTemp/TransomTool-fedora38.artifactbundle/TransomTool-arm64/bin/TransomTool'
+	docker run --platform linux/amd64 --rm -v $(DIST):/outTemp kittymac/transom-fedora38 /bin/bash -lc 'cp TransomTool-focal /outTemp/TransomTool-fedora38.artifactbundle/TransomTool-amd64/bin/TransomTool'
+	cp ./dist/TransomTool ./dist/TransomTool-fedora38.artifactbundle/TransomTool-macos/bin/TransomTool
+	
+	rm -f ./dist/TransomTool-fedora38.zip
+	cd ./dist && zip -r ./TransomTool-fedora38.zip ./TransomTool-fedora38.artifactbundle
 
 docker:
 	-docker buildx create --name cluster_builder203
@@ -80,6 +89,7 @@ docker:
 	docker buildx build --file Dockerfile-focal --platform linux/amd64,linux/arm64 --push -t kittymac/transom-focal .
 	docker buildx build --file Dockerfile-amazonlinux2 --platform linux/amd64,linux/arm64 --push -t kittymac/transom-amazonlinux2 .
 	docker buildx build --file Dockerfile-fedora --platform linux/amd64,linux/arm64 --push -t kittymac/transom-fedora .
+	docker buildx build --file Dockerfile-fedora38 --platform linux/amd64,linux/arm64 --push -t kittymac/transom-fedora38 .
 
 docker-shell:
 	docker buildx build --file Dockerfile-fedora --platform linux/amd64,linux/arm64 --push -t kittymac/transom-fedora .

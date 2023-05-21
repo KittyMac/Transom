@@ -16,7 +16,7 @@ COPY ./Tests ./Tests
 RUN swift package reset
 RUN swift build --configuration release
 
-FROM fedora:37
+FROM swift:5.7.1-focal
 
 WORKDIR /root/Transom
 COPY --from=builder /root/Transom/.build/release/TransomTool-focal .
