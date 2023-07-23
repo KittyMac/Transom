@@ -18,6 +18,21 @@ build:
 clean:
 	rm -rf .build
 
+.PHONY: clean-repo
+clean-repo:
+	rm -rf /tmp/clean-repo/
+	mkdir -p /tmp/clean-repo/
+	cd /tmp/clean-repo/ && git clone https://github.com/KittyMac/Transom.git/
+	cd /tmp/clean-repo/Transom && cp -r dist ../dist.tmp && cp .git/config ../config
+	cd /tmp/clean-repo/Transom && git filter-repo --invert-paths --path dist
+	cd /tmp/clean-repo/Transom && mv ../dist.tmp dist && mv ../config .git/config
+	cd /tmp/clean-repo/Transom && git add dist
+	cd /tmp/clean-repo/Transom && git commit -a -m "clean-repo"
+	open /tmp/clean-repo/Transom
+	# clean complete; manual push required
+	# git push origin --force --all
+	# git push origin --force --tags
+
 .PHONY: update
 update:
 	swift package update
