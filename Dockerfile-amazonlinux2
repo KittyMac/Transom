@@ -6,6 +6,8 @@ RUN yum install -y \
     unzip
 
 WORKDIR /root/Transom
+COPY ./.build/repositories ./.build/repositories
+COPY ./.git ./.git
 COPY ./dist ./dist
 COPY ./Package.resolved ./Package.resolved
 COPY ./Package.swift ./Package.swift
@@ -13,7 +15,7 @@ COPY ./Plugins ./Plugins
 COPY ./Sources ./Sources
 COPY ./Tests ./Tests
 
-RUN swift package reset
+RUN swift package resolve
 RUN swift build --configuration release
 
 FROM swift:5.7.1-amazonlinux2

@@ -4,12 +4,14 @@ RUN dnf install -y \
     git \
     unzip \
     swift-lang-5.7.3-2.fc38 \
-    javascriptcoregtk4.0-devel \
+    javascriptcoregtk4.1-devel \
     libatomic_ops
     
 RUN ln -s /usr/libexec/swift/*/lib/libsourcekitdInProc.so /usr/lib/libsourcekitdInProc.so
 
 WORKDIR /root/Transom
+COPY ./.build/repositories ./.build/repositories
+COPY ./.git ./.git
 COPY ./dist ./dist
 COPY ./Package.resolved ./Package.resolved
 COPY ./Package.swift ./Package.swift
@@ -17,7 +19,7 @@ COPY ./Plugins ./Plugins
 COPY ./Sources ./Sources
 COPY ./Tests ./Tests
 
-RUN swift package reset
+RUN swift package resolve
 RUN swift build --configuration release
 
 FROM fedora:38

@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Chronometer.git",
       "state" : {
-        "revision" : "742a6a58714e6c134d635abc589dbca9526099c3",
-        "version" : "0.1.9"
+        "revision" : "12ac87fa5d945169e32818bda82fa53d8220c256",
+        "version" : "0.1.10"
       }
     },
     {
@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Hitch.git",
       "state" : {
-        "revision" : "f775d6fb66472716b0c5080db13b1cacd29441f9",
-        "version" : "0.4.107"
+        "revision" : "de110dd6d2de0f41f4a4e7b7dea0bb769df7b12b",
+        "version" : "0.4.113"
       }
     },
     {
@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Jib.git",
       "state" : {
-        "revision" : "798c1183157440c0ddab745fb6986768f58f31a5",
-        "version" : "0.0.55"
+        "revision" : "228567845c689ced75baa158c3e31eabd5e24c2e",
+        "version" : "0.0.64"
       }
     },
     {
@@ -41,17 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KittyMac/Pamphlet.git",
       "state" : {
-        "revision" : "bfa2200c6d4a96d989f71bf1eb71be925795c1ac",
-        "version" : "0.3.83"
-      }
-    },
-    {
-      "identity" : "spanker",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/KittyMac/Spanker.git",
-      "state" : {
-        "revision" : "6287aebdb7cb64787b7a6790bfef860ccb55e0ef",
-        "version" : "0.2.33"
+        "revision" : "c962a2227567f0c2f82fb2093b5e48ce20875594",
+        "version" : "0.3.88"
       }
     },
     {
@@ -59,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-argument-parser",
       "state" : {
-        "revision" : "fee6933f37fde9a5e12a1e4aeaa93fe60116ff2a",
-        "version" : "1.2.2"
+        "revision" : "8f4d2753f0e4778c76d5f05ad16c74f707390531",
+        "version" : "1.2.3"
       }
     }
   ],
