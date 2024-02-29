@@ -2,29 +2,57 @@ import Jib
 import Hitch
 import Foundation
 
+public enum Language: String {
+    case kotlin = "kotlin"
+    case typescript = "typescript"
+    
+    func ext() -> String {
+        switch self {
+        case .kotlin: return "kt"
+        case .typescript: return "tsx"
+        }
+    }
+    
+    func compiler() -> String? {
+        switch self {
+        case .kotlin: return "kotlinc"
+        case .typescript: return nil
+        }
+    }
+}
+
 public class TransomFramework {
     public static let shared = TransomFramework()
     
-    public func translate(path: String) -> String? {
+    public func translate(language: Language,
+                          path: String) -> String? {
         guard let swift = try? String(contentsOfFile: path) else { return nil }
         
-        if swift.contains("// kotlin:") == false && swift.contains("//kotlin:") == false {
-            return "\n// no kotlin tags found, skipping...\n"
+        if swift.contains("// \(language.rawValue):") == false && swift.contains("//\(language.rawValue):") == false {
+            return "\n// no \(language.rawValue) tags found, skipping...\n"
         }
                 
         let jib = Jib()
         
         _ = jib.eval("let transom = {};")!
-        _ = jib.eval(TransomFrameworkPamphlet.TransomMinJs())!
+        
+        switch language {
+        case .kotlin:
+            _ = jib.eval(TransomFrameworkPamphlet.TransomKotlinMinJs())!
+        case .typescript:
+            _ = jib.eval(TransomFrameworkPamphlet.TransomTypescriptMinJs())!
+        }
+        
                 
         let jsTransate = jib[function: "transom.translate"]!
         
-        let kotlin = jib.call(string: jsTransate, [path, swift])
-        guard kotlin != "undefined" else { return nil }
-        return kotlin
+        let code = jib.call(string: jsTransate, [path, swift])
+        guard code != "undefined" else { return nil }
+        return code
     }
     
-    public func translate(inputsFile: String,
+    public func translate(language: Language,
+                          inputsFile: String,
                           outputDirectory: String) {
         guard inputsFile.hasSuffix("inputFiles.txt") else {
             fatalError("inputs file is not inputFiles.txt")
@@ -41,23 +69,23 @@ public class TransomFramework {
                 
         var success = true
         
-        var kotlinFiles: [String] = []
-        let kotlinFilesLock = NSLock()
+        var codeFiles: [String] = []
+        let codeFilesLock = NSLock()
         
         for input in inputFiles {
             queue.addOperation {
-                let kotlinFileName = URL(fileURLWithPath: input).deletingPathExtension().appendingPathExtension("kt").lastPathComponent
-                let kotlinFilePath = outputDirectory + "/" + kotlinFileName
+                let codeFileName = URL(fileURLWithPath: input).deletingPathExtension().appendingPathExtension(language.ext()).lastPathComponent
+                let codeFilePath = outputDirectory + "/" + codeFileName
                 
                 //print("\(input): warning: transom processing file")
                 
-                kotlinFilesLock.lock()
-                kotlinFiles.append(kotlinFilePath)
-                kotlinFilesLock.unlock()
+                codeFilesLock.lock()
+                codeFiles.append(codeFilePath)
+                codeFilesLock.unlock()
                 
-                try? FileManager.default.removeItem(atPath: kotlinFilePath)
-                if let kotlin = self.translate(path: input) {
-                    try? kotlin.write(toFile: kotlinFilePath, atomically: false, encoding: .utf8)
+                try? FileManager.default.removeItem(atPath: codeFilePath)
+                if let code = self.translate(language: language, path: input) {
+                    try? code.write(toFile: codeFilePath, atomically: false, encoding: .utf8)
                 } else {
                     success = false
                 }
@@ -66,8 +94,9 @@ public class TransomFramework {
         
         queue.waitUntilAllOperationsAreFinished()
         
-        if success && kotlinFiles.count > 0 {
-            success = compile(files: kotlinFiles,
+        if success && codeFiles.count > 0 {
+            success = compile(language: language,
+                              files: codeFiles,
                               outputDirectory: outputDirectory)
         }
         
@@ -76,7 +105,7 @@ public class TransomFramework {
         if success {
             try! "".write(toFile: canaryFilePath, atomically: false, encoding: .utf8)
         } else {
-            try! #"#error("Swift to Kotlin translation failed; please fix build errors to proceed")"#.write(toFile: canaryFilePath, atomically: false, encoding: .utf8)
+            try! #"#error("Swift translation failed; please fix build errors to proceed")"#.write(toFile: canaryFilePath, atomically: false, encoding: .utf8)
         }
         
         if success == false {
@@ -84,19 +113,21 @@ public class TransomFramework {
         }
     }
     
-    public func translate(file input: String,
+    public func translate(language: Language,
+                          file input: String,
                           outputDirectory: String) {
         if input.hasSuffix("inputFiles.txt") {
-            return translate(inputsFile: input,
+            return translate(language: language,
+                             inputsFile: input,
                              outputDirectory: outputDirectory)
         }
         
-        let kotlinFileName = URL(fileURLWithPath: input).deletingPathExtension().appendingPathExtension("kt").lastPathComponent
-        let kotlinFilePath = outputDirectory + "/" + kotlinFileName
+        let codeFileName = URL(fileURLWithPath: input).deletingPathExtension().appendingPathExtension(language.ext()).lastPathComponent
+        let codeFilePath = outputDirectory + "/" + codeFileName
         
-        try? FileManager.default.removeItem(atPath: kotlinFilePath)
-        if let kotlin = self.translate(path: input) {
-            try? kotlin.write(toFile: kotlinFilePath, atomically: false, encoding: .utf8)
+        try? FileManager.default.removeItem(atPath: codeFilePath)
+        if let code = self.translate(language: language, path: input) {
+            try? code.write(toFile: codeFilePath, atomically: false, encoding: .utf8)
         }
     }
     
@@ -115,9 +146,12 @@ public class TransomFramework {
     }
     
     @discardableResult
-    fileprivate func compile(files: [String],
+    fileprivate func compile(language: Language,
+                             files: [String],
                              outputDirectory: String) -> Bool {
-        let path = pathFor(executable: "kotlinc")
+        guard let compilerName = language.compiler() else { return true }
+        
+        let path = pathFor(executable: compilerName)
         
         do {
             if FileManager.default.fileExists(atPath: path) == false {
@@ -141,7 +175,7 @@ public class TransomFramework {
             if let taskString = String(data: taskData, encoding: .utf8) {
                 let lines = taskString.components(separatedBy: "\n")
                 for line in lines {
-                    if line.contains(".kt:") {
+                    if line.contains(".\(language.ext()):") {
                         print(outputDirectory + "/" + line)
                     }
                 }

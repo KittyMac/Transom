@@ -4,6 +4,12 @@ import Foundation
 
 struct Translate: ParsableCommand {
     
+    @Flag(help: "Translate to kotlin")
+    var kotlin: Bool = false
+    
+    @Flag(help: "Translate to typescript")
+    var typescript: Bool = false
+    
     @Argument(help: "Path to Swift file")
     var inFile: String
     
@@ -17,8 +23,20 @@ struct Translate: ParsableCommand {
         }
         
         if inFile != "skip" {
-            TransomFramework.shared.translate(file: inFile,
-                                              outputDirectory: outputDirectory)
+            var languages: [Language] = []
+            
+            if kotlin {
+                languages.append(.kotlin)
+            }
+            if typescript {
+                languages.append(.typescript)
+            }
+            
+            for language in languages {
+                TransomFramework.shared.translate(language: language,
+                                                  file: inFile,
+                                                  outputDirectory: outputDirectory)
+            }
         }
     }
 

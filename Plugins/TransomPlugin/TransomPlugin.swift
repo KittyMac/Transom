@@ -93,9 +93,11 @@ import PackagePlugin
         
         return [
             .buildCommand(
-                displayName: "Transom Plugin - generating Kotlin...",
+                displayName: "Transom Plugin - generating code...",
                 executable: tool.path,
                 arguments: [
+                    "--kotlin",
+                    "--typescript",
                     inputFilesFilePath,
                     outputFilePath
                 ],
