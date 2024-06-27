@@ -29,7 +29,34 @@ import PackagePlugin
             return []
         }
 
-        let tool = try? context.tool(named: "TransomTool")
+        // Note: We want to load the right pre-compiled tool for the right OS
+        // There are currently two tools:
+        // TransomPluginTool-focal: supports macos and ubuntu-focal
+        // TransomPluginTool-focal: supports macos and amazonlinux2
+        //
+        // When we are compiling to build the precompiled tools, only the
+        // default ( TransomPluginTool-focal ) is available.
+        //
+        // When we are running and want to use the pre-compiled tools, we look in
+        // /etc/os-release (available on linux) to see what distro we are running
+        // and to load the correct tool there.
+        var tool = try? context.tool(named: "TransomTool-focal")
+        
+        if let osFile = try? String(contentsOfFile: "/etc/os-release") {
+            if osFile.contains("Amazon Linux"),
+               let osTool = try? context.tool(named: "TransomTool-amazonlinux2") {
+                tool = osTool
+            }
+            if osFile.contains("Fedora Linux 37"),
+               let osTool = try? context.tool(named: "TransomTool-fedora") {
+                tool = osTool
+            }
+            if osFile.contains("Fedora Linux 38"),
+               let osTool = try? context.tool(named: "TransomTool-fedora38") {
+                tool = osTool
+            }
+        }
+        
         guard let tool = tool else {
             fatalError("TransomPlugin unable to load TransomTool")
         }
