@@ -1,6 +1,37 @@
 import Foundation
 import PackagePlugin
 
+func binaryTool(named toolName: String) -> String {
+    var osName = "focal"
+    var swiftVersion = "unknown"
+    
+    #if os(Windows)
+    osName = "windows"
+    #else
+    if let osFile = try? String(contentsOfFile: "/etc/os-release") {
+        if osFile.contains("Amazon Linux") {
+            osName = "amazonlinux2"
+        }
+        if osFile.contains("Fedora Linux 37") {
+            osName = "fedora37"
+        }
+        if osFile.contains("Fedora Linux 38") {
+            osName = "fedora38"
+        }
+    }
+    #endif
+    
+#if swift(>=5.9.2)
+    swiftVersion = "592"
+#elseif swift(>=5.7.3)
+    swiftVersion = "573"
+#elseif swift(>=5.7.1)
+    swiftVersion = "571"
+#endif
+
+    return "\(toolName)-\(osName)-\(swiftVersion)"
+}
+
 @main struct TransomPlugin: BuildToolPlugin {
         
     func gatherSwiftInputFiles(targets: [Target],
@@ -28,37 +59,11 @@ import PackagePlugin
         guard let target = target as? SwiftSourceModuleTarget else {
             return []
         }
-
-        // Note: We want to load the right pre-compiled tool for the right OS
-        // There are currently two tools:
-        // TransomPluginTool-focal: supports macos and ubuntu-focal
-        // TransomPluginTool-focal: supports macos and amazonlinux2
-        //
-        // When we are compiling to build the precompiled tools, only the
-        // default ( TransomPluginTool-focal ) is available.
-        //
-        // When we are running and want to use the pre-compiled tools, we look in
-        // /etc/os-release (available on linux) to see what distro we are running
-        // and to load the correct tool there.
-        var tool = try? context.tool(named: "TransomTool-focal")
         
-        if let osFile = try? String(contentsOfFile: "/etc/os-release") {
-            if osFile.contains("Amazon Linux"),
-               let osTool = try? context.tool(named: "TransomTool-amazonlinux2") {
-                tool = osTool
-            }
-            if osFile.contains("Fedora Linux 37"),
-               let osTool = try? context.tool(named: "TransomTool-fedora") {
-                tool = osTool
-            }
-            if osFile.contains("Fedora Linux 38"),
-               let osTool = try? context.tool(named: "TransomTool-fedora38") {
-                tool = osTool
-            }
-        }
-        
-        guard let tool = tool else {
-            fatalError("TransomPlugin unable to load TransomTool")
+        let toolName = "TransomTool"
+        let binaryToolName = binaryTool(named: toolName)
+        guard let tool = (try? context.tool(named: binaryToolName)) ?? (try? context.tool(named: toolName)) else {
+            fatalError("TransomTool unable to load \(binaryToolName)")
         }
         
         // Find all .swift files in our target and all of our target's dependencies, add them as input files

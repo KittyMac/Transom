@@ -10,7 +10,7 @@ let productsTarget: [PackageDescription.Product] = [
 ]
 let pluginTarget: [PackageDescription.Target] = [
     .executableTarget(
-        name: "TransomTool-focal",
+        name: "TransomTool",
         dependencies: [
             "Hitch",
             "TransomFramework",
@@ -20,35 +20,31 @@ let pluginTarget: [PackageDescription.Target] = [
     .plugin(
         name: "TransomPlugin",
         capability: .buildTool(),
-        dependencies: ["TransomTool-focal"]
+        dependencies: ["TransomTool"]
     ),
 ]
 #else
 let productsTarget: [PackageDescription.Product] = [
     .library(name: "TransomTool", targets: [
-        "TransomTool-focal",
-        "TransomTool-amazonlinux2",
-        "TransomTool-fedora",
-        "TransomTool-fedora38",
+        "TransomTool-focal-571",
+        "TransomTool-focal-592",
+        "TransomTool-fedora38-573",
     ]),
 ]
 let pluginTarget: [PackageDescription.Target] = [
-    .binaryTarget(name: "TransomTool-focal",
-                  path: "dist/TransomTool-focal.zip"),
-    .binaryTarget(name: "TransomTool-amazonlinux2",
-                  path: "dist/TransomTool-amazonlinux2.zip"),
-    .binaryTarget(name: "TransomTool-fedora",
-                  path: "dist/TransomTool-fedora.zip"),
-    .binaryTarget(name: "TransomTool-fedora38",
-                  path: "dist/TransomTool-fedora38.zip"),
+    .binaryTarget(name: "TransomTool-focal-571",
+                  path: "dist/TransomTool-focal-571.zip"),
+    .binaryTarget(name: "TransomTool-focal-592",
+                  path: "dist/TransomTool-focal-592.zip"),
+    .binaryTarget(name: "TransomTool-fedora38-573",
+                  path: "dist/TransomTool-fedora38-573.zip"),
     .plugin(
         name: "TransomPlugin",
         capability: .buildTool(),
         dependencies: [
-            "TransomTool-focal",
-            "TransomTool-amazonlinux2",
-            "TransomTool-fedora",
-            "TransomTool-fedora38",
+            "TransomTool-focal-571",
+            "TransomTool-focal-592",
+            "TransomTool-fedora38-573",
         ]
     ),
 ]
@@ -76,7 +72,7 @@ let package = Package(
                 "Jib"
             ],
             plugins: [
-                .plugin(name: "PamphletReleaseOnlyPlugin", package: "Pamphlet")
+                .plugin(name: "PamphletPlugin", package: "Pamphlet")
             ]
         ),
         .testTarget(
