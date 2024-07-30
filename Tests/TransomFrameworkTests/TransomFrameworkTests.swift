@@ -4,6 +4,10 @@
 import XCTest
 import TransomFramework
 
+public struct AnyResponse: Codable {
+    public let error: String?
+}
+
 final class TransomFrameworkTests: XCTestCase {
     
     func testBadCode() {
