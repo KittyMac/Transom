@@ -5,7 +5,7 @@ import PackageDescription
 // When runnning "make release" to build the binary tools change this to true
 // Otherwise always set it to false
 // NOTE: currently does not build with Xcode 15
-#if true
+#if false
 let productsTarget: [PackageDescription.Product] = [
     
 ]
