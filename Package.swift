@@ -71,10 +71,12 @@ let package = Package(
             dependencies: [
                 "Hitch",
                 "Jib"
-            ],
-            plugins: [
-                .plugin(name: "PamphletPlugin", package: "Pamphlet")
             ]
+            // NOTE: for some reason swift 5.9.2 refuses to run the build tool, so
+            // we geenrate it manually using make pamphlet
+            //plugins: [
+            //    .plugin(name: "PamphletPlugin", package: "Pamphlet")
+            //]
         ),
         .testTarget(
             name: "TransomFrameworkTests",

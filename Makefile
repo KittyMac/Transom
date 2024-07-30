@@ -22,8 +22,8 @@ PROJECTNAME := $(shell basename `pwd`)
 all: build
 
 .PHONY: build
-build:
-	swift build --triple arm64-apple-macosx $(SWIFT_BUILD_FLAGS) 
+build: pamphlet
+	swift build --triple arm64-apple-macosx $(SWIFT_BUILD_FLAGS)
 	swift build --triple x86_64-apple-macosx $(SWIFT_BUILD_FLAGS)
 	-rm .build/TransomTool
 	lipo -create -output .build/TransomTool .build/arm64-apple-macosx/release/TransomTool .build/x86_64-apple-macosx/release/TransomTool
@@ -47,6 +47,10 @@ clean-repo:
 	# clean complete; manual push required
 	# git push origin --force --all
 	# git push origin --force --tags
+	
+.PHONY: pamphlet
+pamphlet:
+	pamphlet generate --prefix TransomFramework Sources/TransomFramework/Pamphlet Sources/TransomFramework
 
 .PHONY: update
 update:
@@ -74,13 +78,13 @@ install: clean build
 .PHONY: release
 release: install focal-571 focal-592 fedora38-573
 
-focal-571:
+focal-571: pamphlet
 	@$(call DOCKER_BUILD_TOOL,focal-571)
 	
-focal-592:
+focal-592: pamphlet
 	@$(call DOCKER_BUILD_TOOL,focal-592)
 
-fedora38-573:
+fedora38-573: pamphlet
 	@$(call DOCKER_BUILD_TOOL,fedora38-573)
 
 docker:
