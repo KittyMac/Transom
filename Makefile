@@ -88,8 +88,8 @@ fedora38-573: pamphlet
 	@$(call DOCKER_BUILD_TOOL,fedora38-573)
 
 docker:
-	-docker buildx create --name cluster_builder203
-	-DOCKER_HOST=ssh://rjbowli@192.168.111.203 docker buildx create --name cluster_builder203 --platform linux/amd64 --append
+	-DOCKER_HOST=ssh://rjbowli@192.168.111.203 docker buildx create --name cluster_builder203 --platform linux/amd64
+	-docker buildx create --name cluster_builder203 --platform linux/arm64 --append
 	-docker buildx use cluster_builder203
 	-docker buildx inspect --bootstrap
 	-docker login
