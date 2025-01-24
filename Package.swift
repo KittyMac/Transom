@@ -25,14 +25,23 @@ let pluginTarget: [PackageDescription.Target] = [
     ),
 ]
 #else
-let productsTarget: [PackageDescription.Product] = [
-    .library(name: "TransomTool", targets: [
-        "TransomTool-focal-571",
-        "TransomTool-focal-592",
-        "TransomTool-fedora38-573",
-    ]),
+
+var plugins = [
+    "TransomTool-focal-571",
+    "TransomTool-focal-592",
+    "TransomTool-fedora38-573",
 ]
-let pluginTarget: [PackageDescription.Target] = [
+
+#if os(Windows)
+plugins += [
+    "TransomTool-windows-592",
+]
+#endif
+
+var productsTarget: [PackageDescription.Product] = [
+    .library(name: "TransomTool", targets: plugins),
+]
+var pluginTarget: [PackageDescription.Target] = [
     .binaryTarget(name: "TransomTool-focal-571",
                   path: "dist/TransomTool-focal-571.zip"),
     .binaryTarget(name: "TransomTool-focal-592",
@@ -42,13 +51,17 @@ let pluginTarget: [PackageDescription.Target] = [
     .plugin(
         name: "TransomPlugin",
         capability: .buildTool(),
-        dependencies: [
-            "TransomTool-focal-571",
-            "TransomTool-focal-592",
-            "TransomTool-fedora38-573",
-        ]
+        dependencies: plugins.map({ Target.Dependency(stringLiteral: $0) })
     ),
 ]
+
+#if os(Windows)
+pluginTarget += [
+    .binaryTarget(name: "TransomTool-windows-592",
+                  path: "dist/TransomTool-windows-592.zip"),
+]
+#endif
+
 #endif
 
 let package = Package(

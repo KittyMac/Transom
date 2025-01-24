@@ -29,6 +29,16 @@ build: pamphlet
 	lipo -create -output .build/TransomTool .build/arm64-apple-macosx/release/TransomTool .build/x86_64-apple-macosx/release/TransomTool
 	cp .build/TransomTool ./dist/TransomTool
 
+build-windows:
+	# note: you probably don't have make on windows, so you need to run these manually
+	Stop-Process -Name "TransomPackageTests.xctest"
+	rm -Recurse -Force .build
+	swift test
+	swift build --configuration release
+	cp .build/release/TransomTool.exe ./dist/TransomTool-windows-592.artifactbundle/TransomTool-amd64/bin/TransomTool.exe
+	rm ./dist/TransomTool-windows-592.zip
+	Compress-Archive -Path ./dist/TransomTool-windows-592.artifactbundle -DestinationPath ./dist/TransomTool-windows-592.zip
+
 .PHONY: clean
 clean:
 	rm -rf .build
