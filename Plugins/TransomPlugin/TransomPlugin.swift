@@ -89,7 +89,11 @@ func binaryTool(context: PluginContext, named toolName: String) -> String {
         //                      inputFiles: &dependencyFiles)
         
         
-        let allInputFiles = rootFiles + dependencyFiles
+        var allInputFiles = (rootFiles + dependencyFiles).map { $0.string }
+        
+        #if os(Windows)
+        allInputFiles = allInputFiles.map { "C:" + $0 }
+        #endif
         
         var pluginWorkDirectory = context.pluginWorkDirectory.string
         #if os(Windows)
@@ -114,6 +118,10 @@ func binaryTool(context: PluginContext, named toolName: String) -> String {
         //allOutputFiles += allInputFiles.map { outputFilePath + "/" + URL(fileURLWithPath: $0.string).deletingPathExtension().appendingPathExtension("kt").lastPathComponent }
         allOutputFiles.append(outputFilePath + "/canary.swift")
         
+        #if os(Windows)
+        allOutputFiles = allOutputFiles.map { "C:" + $0 }
+        #endif
+        
         return [
             .buildCommand(
                 displayName: "Transom Plugin - generating code...",
@@ -124,7 +132,7 @@ func binaryTool(context: PluginContext, named toolName: String) -> String {
                     inputFilesFilePath,
                     outputFilePath
                 ],
-                inputFiles: allInputFiles,
+                inputFiles: allInputFiles.map { PackagePlugin.Path($0) },
                 outputFiles: allOutputFiles.map { PackagePlugin.Path($0) }
             )
         ]
