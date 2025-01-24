@@ -90,8 +90,13 @@ func binaryTool(context: PluginContext, named toolName: String) -> String {
         
         
         let allInputFiles = rootFiles + dependencyFiles
+        
+        var pluginWorkDirectory = context.pluginWorkDirectory.string
+        #if os(Windows)
+        pluginWorkDirectory = "C:" + pluginWorkDirectory
+        #endif
                 
-        let inputFilesFilePath = context.pluginWorkDirectory.string + "/inputFiles.txt"
+        let inputFilesFilePath = pluginWorkDirectory + "/inputFiles.txt"
         var inputFilesString = ""
         
         for file in rootFiles {
