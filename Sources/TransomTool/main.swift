@@ -10,6 +10,9 @@ struct Translate: ParsableCommand {
     @Flag(help: "Translate to typescript")
     var typescript: Bool = false
     
+    @Flag(help: "Translate to dart")
+    var dart: Bool = false
+    
     @Argument(help: "Path to Swift file")
     var inFile: String
     
@@ -30,6 +33,9 @@ struct Translate: ParsableCommand {
             }
             if typescript {
                 languages.append(.typescript)
+            }
+            if dart {
+                languages.append(.dart)
             }
             
             for language in languages {

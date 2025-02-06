@@ -129,6 +129,7 @@ func binaryTool(context: PluginContext, named toolName: String) -> String {
                 arguments: [
                     "--kotlin",
                     "--typescript",
+                    "--dart",
                     inputFilesFilePath,
                     outputFilePath
                 ],
