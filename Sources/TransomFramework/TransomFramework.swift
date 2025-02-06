@@ -5,11 +5,13 @@ import Foundation
 public enum Language: String {
     case kotlin = "kotlin"
     case typescript = "typescript"
+    case dart = "dart"
     
     func ext() -> String {
         switch self {
         case .kotlin: return "kt"
         case .typescript: return "tsx"
+        case .dart: return "dart"
         }
     }
     
@@ -17,6 +19,7 @@ public enum Language: String {
         switch self {
         case .kotlin: return "kotlinc"
         case .typescript: return nil
+        case .dart: return nil
         }
     }
 }
@@ -41,6 +44,8 @@ public class TransomFramework {
             _ = jib.eval(TransomFrameworkPamphlet.TransomKotlinMinJs())!
         case .typescript:
             _ = jib.eval(TransomFrameworkPamphlet.TransomTypescriptMinJs())!
+        case .dart:
+            _ = jib.eval(TransomFrameworkPamphlet.TransomDartMinJs())!
         }
         
                 
