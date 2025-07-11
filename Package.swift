@@ -66,9 +66,6 @@ pluginTarget += [
 
 let package = Package(
     name: "Transom",
-    platforms: [
-        .macOS(.v10_13), .iOS(.v11)
-    ],
     products: productsTarget + [
         .plugin(name: "TransomPlugin", targets: ["TransomPlugin"]),
     ],
