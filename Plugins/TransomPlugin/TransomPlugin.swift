@@ -17,6 +17,9 @@ func binaryTool(context: PluginContext, named toolName: String) -> String {
         if osFile.contains("Fedora Linux 38") {
             osName = "fedora38"
         }
+        if osFile.contains("noble") {
+            osName = "noble"
+        }
     }
     #endif
     
