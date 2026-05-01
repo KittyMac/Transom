@@ -86,13 +86,16 @@ install: clean build
 	-cp .build/TransomTool /usr/local/dist/Transom
 
 .PHONY: release
-release: install focal-571 focal-592 fedora38-573
+release: install focal-571 focal-592 noble-592 fedora38-573
 
 focal-571: pamphlet
 	@$(call DOCKER_BUILD_TOOL,focal-571)
 	
 focal-592: pamphlet
 	@$(call DOCKER_BUILD_TOOL,focal-592)
+	
+noble-592: pamphlet
+	@$(call DOCKER_BUILD_TOOL,noble-592)
 
 fedora38-573: pamphlet
 	@$(call DOCKER_BUILD_TOOL,fedora38-573)

@@ -29,6 +29,7 @@ let pluginTarget: [PackageDescription.Target] = [
 var plugins = [
     "TransomTool-focal-571",
     "TransomTool-focal-592",
+    "TransomTool-noble-592",
     "TransomTool-fedora38-573",
 ]
 
@@ -46,6 +47,8 @@ var pluginTarget: [PackageDescription.Target] = [
                   path: "dist/TransomTool-focal-571.zip"),
     .binaryTarget(name: "TransomTool-focal-592",
                   path: "dist/TransomTool-focal-592.zip"),
+    .binaryTarget(name: "TransomTool-noble-592",
+                  path: "dist/TransomTool-noble-592.zip"),
     .binaryTarget(name: "TransomTool-fedora38-573",
                   path: "dist/TransomTool-fedora38-573.zip"),
     .plugin(
